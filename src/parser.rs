@@ -1,4 +1,4 @@
-use super::{lexer::Lexer, tokens::Token};
+use super::tokens::Token;
 
 pub struct Parser {
     tokens: Vec<Token>,
@@ -8,7 +8,7 @@ impl Parser {
     pub fn new(tokens: Vec<Token>) -> Parser {
         Parser { tokens }
     }
-    pub fn convert_to_rpn(&mut self) -> Vec<Token> {
+    pub fn gen_rpn_tokens(&self) -> Vec<Token> {
         let mut op_stack: Vec<Token> = Vec::new();
         let mut result: Vec<Token> = Vec::new();
         self.tokens.iter().for_each(|token| {
@@ -42,6 +42,7 @@ impl Parser {
 }
 
 fn get_precedence(token: &Token) -> usize {
+
     match *token {
         Token::MUTIPLY | Token::DIVIDE => 2,
         Token::PLUS | Token::MINUS => 1,
@@ -51,11 +52,12 @@ fn get_precedence(token: &Token) -> usize {
 
 #[cfg(test)]
 mod test {
-    use super::{Lexer, Parser, Token};
+    use super::{Parser, Token};
+    use super::super::lexer::Lexer;
     #[test]
     fn parser_test_0() {
         let mut lexer = Lexer::new("3 + 4 * 2".to_string());
-        let mut parser = Parser::new(lexer.gen_tokens());
+        let parser = Parser::new(lexer.gen_tokens());
         let tokens = vec![
             Token::LITERAL("3".to_string()),
             Token::LITERAL("4".to_string()),
@@ -63,12 +65,12 @@ mod test {
             Token::MUTIPLY,
             Token::PLUS,
         ];
-        assert_eq!(tokens, parser.convert_to_rpn());
+        assert_eq!(tokens, parser.gen_rpn_tokens());
     }
     #[test]
     fn parser_test_1() {
         let mut lexer = Lexer::new("(3 + 4) * 2".to_string());
-        let mut parser = Parser::new(lexer.gen_tokens());
+        let parser = Parser::new(lexer.gen_tokens());
         let tokens = vec![
             Token::LITERAL("3".to_string()),
             Token::LITERAL("4".to_string()),
@@ -76,12 +78,12 @@ mod test {
             Token::LITERAL("2".to_string()),
             Token::MUTIPLY,
         ];
-        assert_eq!(tokens, parser.convert_to_rpn());
+        assert_eq!(tokens, parser.gen_rpn_tokens());
     }
     #[test]
     fn parser_test_2() {
         let mut lexer = Lexer::new("4*3+5*9/2".to_string());
-        let mut parser = Parser::new(lexer.gen_tokens());
+        let parser = Parser::new(lexer.gen_tokens());
         let tokens = vec![
             Token::LITERAL("4".to_string()),
             Token::LITERAL("3".to_string()),
@@ -93,6 +95,30 @@ mod test {
             Token::DIVIDE,
             Token::PLUS,
         ];
-        assert_eq!(tokens, parser.convert_to_rpn());
+        assert_eq!(tokens, parser.gen_rpn_tokens());
+    }
+    #[test]
+    fn parser_test_3() {
+        let mut lexer = Lexer::new("3 - 4".to_string());
+        let parser = Parser::new(lexer.gen_tokens());
+        let tokens = vec![
+            Token::LITERAL("3".to_string()),
+            Token::LITERAL("4".to_string()),
+            Token::MINUS,
+        ];
+        assert_eq!(tokens, parser.gen_rpn_tokens());
+    }
+    #[test]
+    fn parser_test_4() {
+        let mut lexer = Lexer::new("3 - 4 - 7".to_string());
+        let parser = Parser::new(lexer.gen_tokens());
+        let tokens = vec![
+            Token::LITERAL("3".to_string()),
+            Token::LITERAL("4".to_string()),
+            Token::MINUS,
+            Token::LITERAL("7".to_string()),
+            Token::MINUS,
+        ];
+        assert_eq!(tokens, parser.gen_rpn_tokens());
     }
 }

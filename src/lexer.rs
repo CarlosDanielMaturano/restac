@@ -104,13 +104,13 @@ mod test {
     }
     #[test]
     #[should_panic]
-    fn lexer_panic_1() {
+    fn lexer_panic_0() {
         let mut lexer = Lexer::new(String::from("3 + 4..5"));
         lexer.gen_tokens();
     }
     #[test]
     #[should_panic]
-    fn lexer_panic_2() {
+    fn lexer_panic_1() {
         let mut lexer = Lexer::new(String::from("3 # 4"));
         lexer.gen_tokens();
     }
