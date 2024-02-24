@@ -17,19 +17,17 @@ impl Lexer {
     pub fn advance(&mut self) {
         if self.index >= self.input.len() {
             self.char = None;
-            return
+            return;
         }
-        self.char = self.input.
-            chars()
-            .nth(self.index);
-        self.index+= 1;
+        self.char = self.input.chars().nth(self.index);
+        self.index += 1;
     }
     pub fn gen_number(&mut self) -> Token {
         let mut number = String::new();
         let mut dot_count: usize = 0;
         while let Some(char) = self.char {
             if !char.is_numeric() && char != '.' {
-                break
+                break;
             }
             if char.is_numeric() {
                 number += &char.to_string();
@@ -50,7 +48,7 @@ impl Lexer {
         while let Some(char) = self.char {
             if char.is_numeric() {
                 tokens.push(self.gen_number());
-                continue
+                continue;
             }
             match char {
                 '+' => tokens.push(Token::PLUS),
@@ -71,7 +69,7 @@ impl Lexer {
 
 #[cfg(test)]
 mod test {
-    use super::{Token, Lexer};
+    use super::{Lexer, Token};
     #[test]
     fn lexer_test_0() {
         let mut lexer = Lexer::new(String::from("3 + 4 - 5"));
@@ -117,4 +115,3 @@ mod test {
         lexer.gen_tokens();
     }
 }
-
