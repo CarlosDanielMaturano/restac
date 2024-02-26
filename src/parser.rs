@@ -8,6 +8,8 @@ impl Parser {
     pub fn new(tokens: Vec<Token>) -> Parser {
         Parser { tokens }
     }
+
+    // convert the tokens to a reverse polish notation, that the evaluator will use
     pub fn gen_rpn_tokens(&self) -> Vec<Token> {
         let mut op_stack: Vec<Token> = Vec::new();
         let mut result: Vec<Token> = Vec::new();
@@ -31,10 +33,11 @@ impl Parser {
                 }
                 _ => {
                     while !op_stack.is_empty()
+                        // token has llss precedence than the last element of the operation stack
                         && get_precedence(
                             op_stack
                                 .last()
-                                .expect("Cannot pop out of the operation stack"),
+                                .expect("Cannot get last element from operation stack"),
                         ) >= get_precedence(&token)
                     {
                         result.push(

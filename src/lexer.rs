@@ -10,10 +10,16 @@ impl Lexer {
     pub fn new(input: String) -> Lexer {
         Lexer {
             input: input.split_whitespace().collect::<String>(),
-            char: Some(input.chars().nth(0).expect("")),
+            char: Some(
+                input
+                    .chars()
+                    .nth(0)
+                    .expect("Error while getting the first character from the input"),
+            ),
             index: 1,
         }
     }
+
     pub fn advance(&mut self) {
         if self.index >= self.input.len() {
             self.char = None;
@@ -22,27 +28,29 @@ impl Lexer {
         self.char = self.input.chars().nth(self.index);
         self.index += 1;
     }
+
     pub fn gen_number(&mut self) -> Token {
         let mut number = String::new();
         let mut dot_count: usize = 0;
         while let Some(char) = self.char {
-            if !char.is_numeric() && char != '.' {
-                break;
+            match char {
+                char if char.is_numeric() => {
+                    number += &char.to_string();
+                }
+                '.' => {
+                    dot_count += 1;
+                    if dot_count >= 2 {
+                        panic!("Invalid literal");
+                    }
+                    number += &char.to_string();
+                }
+                _ => break,
             }
-            if char.is_numeric() {
-                number += &char.to_string();
-                self.advance();
-                continue;
-            }
-            dot_count += 1;
-            if dot_count >= 2 {
-                panic!("Invalid literal")
-            }
-            number += &'.'.to_string();
             self.advance()
         }
         Token::LITERAL(number)
     }
+
     pub fn gen_tokens(&mut self) -> Vec<Token> {
         let mut tokens: Vec<Token> = Vec::new();
         while let Some(char) = self.char {
@@ -115,5 +123,11 @@ mod test {
     fn lexer_panic_1() {
         let mut lexer = Lexer::new(String::from("3 # 4"));
         lexer.gen_tokens();
+    }
+    // panic if the given string is empty
+    #[test]
+    #[should_panic]
+    fn lexer_panic_2() {
+        let _ = Lexer::new(String::from(""));
     }
 }
