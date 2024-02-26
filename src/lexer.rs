@@ -65,8 +65,6 @@ impl Lexer {
                 '/' => tokens.push(Token::DIVIDE),
                 '(' => tokens.push(Token::LPAREN),
                 ')' => tokens.push(Token::RPAREN),
-                '[' => tokens.push(Token::LPAREN),
-                ']' => tokens.push(Token::RPAREN),
                 _ => {
                     panic!("Unrecognized char '{char}'")
                 }
