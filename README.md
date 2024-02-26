@@ -18,8 +18,37 @@
     400
 ```
 
-<p><strong>NOTE:</strong> some expressions without parenthesis are not yet supported: </p>
+<p><strong>NOTE:</strong> some expressions( such as negatives numbers and multiplying parenthesis ) are not yet supported: </p>
 
 ```bash
     expression>
+    -5 + 3
+    thread 'main' panicked at src/evaluator.rs:21:34:
+    Cannot pop out of stack
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    (4 + 3)(4 - 3)
+    thread 'main' panicked at src/evaluator.rs:21:34:
+    Cannot pop out of stack
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
+
+# Contributing
+
+## <p>Open an issue describing the feature/bug fix and make a PR with your code, i'will check and merge</p>
+
+---
+
+### Testing
+
+<p>Unit tests are included, you can check if the code is properly working by running: </p>
+
+```bash
+    cargo test
+```
+
+<p>Just remember to add more unit tests if you add something to the code</p>
+
+## Todo
+
+    [] Bug fix of negative numbers and multiplying parenthesis
+    [] Add some more advance functions, such as potentiation and trigonometric

@@ -1,4 +1,4 @@
-use math_parser::*;
+use restac::*;
 
 fn eval_operation(input: &String) -> f64 {
     let mut lexer = lexer::Lexer::new(input.to_string());
