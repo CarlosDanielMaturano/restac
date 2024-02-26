@@ -21,15 +21,27 @@ impl Parser {
                         if let Some(Token::LPAREN) = op_stack.last() {
                             break;
                         }
-                        result.push(op_stack.pop().expect("Cannot pop out of the stack"));
+                        result.push(
+                            op_stack
+                                .pop()
+                                .expect("Cannot pop out of the operation stack"),
+                        );
                     }
                     op_stack.pop().expect("Cannot pop out of the stack");
                 }
                 _ => {
                     while !op_stack.is_empty()
-                        && get_precedence(&token) <= get_precedence(op_stack.last().expect("Cannot pop out of the stack"))
+                        && get_precedence(
+                            op_stack
+                                .last()
+                                .expect("Cannot pop out of the operation stack"),
+                        ) >= get_precedence(&token)
                     {
-                        result.push(op_stack.pop().expect("Cannot pop out of the stack"));
+                        result.push(
+                            op_stack
+                                .pop()
+                                .expect("Cannot pop out of the operation stack"),
+                        );
                     }
                     op_stack.push(token)
                 }
@@ -42,7 +54,6 @@ impl Parser {
 }
 
 fn get_precedence(token: &Token) -> usize {
-
     match *token {
         Token::MUTIPLY | Token::DIVIDE => 2,
         Token::PLUS | Token::MINUS => 1,
@@ -52,8 +63,8 @@ fn get_precedence(token: &Token) -> usize {
 
 #[cfg(test)]
 mod test {
-    use super::{Parser, Token};
     use super::super::lexer::Lexer;
+    use super::{Parser, Token};
     #[test]
     fn parser_test_0() {
         let mut lexer = Lexer::new("3 + 4 * 2".to_string());
